@@ -5,7 +5,7 @@ POST http://localhost:8080/hello
 Content-Type: application/json
 
 {
-  "name": "what is up I am 8080"
+  "name": "bilibili"
 }
 
 ###
@@ -17,7 +17,7 @@ POST http://localhost:9090/hello
 Content-Type: application/json
 
 {
-  "name": "what is up I am 9090"
+  "name": "bilibili"
 }
 
 ###
