@@ -8,6 +8,14 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+
 public class ServerVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
@@ -30,7 +38,7 @@ public class ServerVerticle extends AbstractVerticle {
 
         router.errorHandler(500, rc -> {
             rc.failure().printStackTrace();
-            rc.response().setStatusCode(500).end("我错了");
+            rc.response().setStatusCode(500).end("i am wrong :" + rc.failure().getMessage());
         });
 
         server.requestHandler(router).listen(8080, event -> {
