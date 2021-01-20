@@ -8,14 +8,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.BodyHandler;
-
 public class ServerVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
@@ -23,7 +15,7 @@ public class ServerVerticle extends AbstractVerticle {
 
         Router router = Router.router(vertx);
 
-        router.get("/hello").handler(routingContext -> {
+        router.get("/a/hello").handler(routingContext -> {
             HttpServerResponse response = routingContext.response();
             HttpServerRequest request = routingContext.request();
             response.end("hello world");
@@ -39,6 +31,10 @@ public class ServerVerticle extends AbstractVerticle {
         router.errorHandler(500, rc -> {
             rc.failure().printStackTrace();
             rc.response().setStatusCode(500).end("i am wrong :" + rc.failure().getMessage());
+        });
+
+        router.errorHandler(404, rc -> {
+            rc.response().setStatusCode(404).end("no page");
         });
 
         server.requestHandler(router).listen(8080, event -> {
