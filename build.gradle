@@ -43,6 +43,7 @@ dependencies {
     testImplementation("io.vertx:vertx-junit5:$vertxVersion")
 }
 
+
 shadowJar {
     classifier = 'fat'
     manifest {
