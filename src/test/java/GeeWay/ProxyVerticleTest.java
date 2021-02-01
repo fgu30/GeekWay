@@ -3,6 +3,8 @@ package GeeWay;
 import groovy.json.JsonSlurper;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.predicate.ResponsePredicate;
@@ -78,6 +80,38 @@ public class ProxyVerticleTest {
     }
 
     @Test
+    void testFrontendWeb1Cache(Vertx vertx, VertxTestContext testContext) {
+        WebClient client = WebClient.create(vertx);
+        client.get(9090, "127.0.0.1", "/web1")
+                .expect(ResponsePredicate.SC_OK)
+                .send()
+                .onSuccess(response -> {
+                    assertThat(response.getHeader("cache-control"))
+                            .isEqualTo("public, immutable, max-age=30");
+                    testContext.completeNow();
+                })
+                .onFailure(testContext::failNow);
+
+    }
+
+    @Test
+    void testFrontendWeb1Cache2(Vertx vertx, VertxTestContext testContext) {
+        WebClient client = WebClient.create(vertx);
+        client.get(9090, "127.0.0.1", "/web2")
+                .expect(ResponsePredicate.SC_OK)
+                .send()
+                .onSuccess(response -> {
+                    assertThat(response.headers().getAll("cache-control"))
+                            .hasSize(2);
+                    assertThat(response.headers().get("cache-control"))
+                            .containsSequence("no-");
+                    testContext.completeNow();
+                })
+                .onFailure(testContext::failNow);
+
+    }
+
+    @Test
     void testFrontendWeb2(Vertx vertx, VertxTestContext testContext) {
         WebClient client = WebClient.create(vertx);
         client.get(9090, "127.0.0.1", "/web2")
@@ -119,6 +153,24 @@ public class ProxyVerticleTest {
                     testContext.completeNow();
                 })
                 .onFailure(testContext::failNow);
+
+    }
+
+    @Test
+    void testWebsocket(Vertx vertx, VertxTestContext testContext) {
+        HttpClientOptions clientOptions = new HttpClientOptions();
+        clientOptions.setDefaultHost("127.0.0.1");
+        clientOptions.setDefaultPort(9090);
+
+        HttpClient client = vertx.createHttpClient(clientOptions);
+
+        client.webSocket("/websocket").onSuccess(ws -> {
+            ws.handler(replyBuffer -> {
+                assertThat(replyBuffer.toString()).isEqualTo("hello");
+                testContext.completeNow();
+            });
+            ws.exceptionHandler(testContext::failNow);
+        }).onFailure(testContext::failNow);
 
     }
 

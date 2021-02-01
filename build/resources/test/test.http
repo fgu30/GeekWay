@@ -1,0 +1,23 @@
+GET http://localhost:8080/hello
+
+###
+POST http://localhost:8080/hello
+Content-Type: application/json
+
+{
+  "name": "what is up I am 8080"
+}
+
+###
+
+GET http://localhost:9091/a/hello?x=1
+
+###
+POST http://localhost:9091/hello
+Content-Type: application/json
+
+{
+  "name": "what is up I am 9090"
+}
+
+###

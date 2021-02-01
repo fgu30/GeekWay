@@ -1,6 +1,12 @@
 GeeWay/MainVerticle.java
  GeeWay.MainVerticle
+GeeWay/launcher/GeeLauncher.java
+ GeeWay.launcher.GeeLauncher
 GeeWay/ServerVerticle.java
  GeeWay.ServerVerticle
 GeeWay/ProxyVerticle.java
  GeeWay.ProxyVerticle
+GeeWay/domain/Frontend.java
+ GeeWay.domain.Frontend
+GeeWay/domain/Upstream.java
+ GeeWay.domain.Upstream
