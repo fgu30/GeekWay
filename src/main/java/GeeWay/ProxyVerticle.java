@@ -4,6 +4,7 @@ import GeeWay.domain.Frontend;
 import GeeWay.domain.Upstream;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.MultiMap;
 import io.vertx.core.http.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -35,8 +36,21 @@ public class ProxyVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
         for (Frontend frontend : frontendList) {
             router.route(frontend.getPrefix())
-                    .handler(StaticHandler.create().setAllowRootFileSystemAccess(true)
-                            .setWebRoot(frontend.getDir()));
+                    .handler(rc -> {
+                        if (!frontend.isCachingEnabled()) {
+                            MultiMap headers = rc.response().headers();
+                            headers.add("Cache-Control", "no-store")
+                                    .add("Cache-Control", "no-cache");
+                        }
+
+                        rc.next();
+                    })
+                    .handler(StaticHandler.create()
+                            .setAllowRootFileSystemAccess(true)
+                            .setWebRoot(frontend.getDir())
+                            .setCachingEnabled(frontend.isCachingEnabled())
+                            .setMaxAgeSeconds(frontend.getMaxAgeSeconds())
+                    );
         }
 
         router.errorHandler(404, err -> {
@@ -50,6 +64,10 @@ public class ProxyVerticle extends AbstractVerticle {
 
             err.response().setStatusCode(404).end("404");
         });
+
+//        server.webSocketHandler(websocket -> {
+//            System.out.println(websocket.path());
+//        });
 
         server.requestHandler(req -> {
             String path = req.path();
@@ -119,7 +137,7 @@ public class ProxyVerticle extends AbstractVerticle {
 
         }).listen(port, event -> {
             if (event.succeeded()) {
-                System.out.println("server is listening at port: " + port);
+                System.out.println("启动在" + port + "端口");
             }
         });
     }
