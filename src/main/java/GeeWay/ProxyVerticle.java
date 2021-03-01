@@ -121,8 +121,6 @@ public class ProxyVerticle extends AbstractVerticle {
                             reqUpstream.send(req).onSuccess(respUpstream -> {
                                 resp.setStatusCode(respUpstream.statusCode());
                                 resp.headers().setAll(respUpstream.headers());
-                                resp.headers().set("Server", "nginx/1.19.10");
-                                resp.headers().set("Connection", "keep-alive");
                                 resp.send(respUpstream);
                             }).onFailure(err -> {
                                 err.printStackTrace();
@@ -141,12 +139,13 @@ public class ProxyVerticle extends AbstractVerticle {
 
         }).listen(port, event -> {
             if (event.succeeded()) {
-                System.out.println("启动在" + port + "端口");
+                System.out.println("server is listening at " + port);
             }
         });
     }
 
     void error(HttpServerResponse resp, Throwable err) {
+        err.printStackTrace();
         resp.setStatusCode(500).end(err.getMessage());
     }
 }

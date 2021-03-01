@@ -4,21 +4,46 @@
     {
       "prefix": "/web1",
       "dir": "/Users/liurui/develop/workspace-github/geekwalk/src/test/resources/web1",
-      "reroute404": "/web1"
+      "reroute404": "/web1",
+      "cachingEnabled": true,
+      "maxAgeSeconds": 30
     },
     {
       "prefix": "/web2",
-      "dir": "/Users/liurui/develop/workspace-github/geekwalk/src/test/resources/web2"
+      "dir": "/Users/liurui/develop/workspace-github/geekwalk/src/test/resources/web2",
+      "cachingEnabled": false
     }
   ],
-  "upstream": [
+  "backend": [
     {
       "prefix": "/a",
-      "url": "http://127.0.0.1:8080/a"
+      "upstream": [
+        {
+          "url": "http://127.0.0.1:8080/a",
+          "weight": 1
+        },
+        {
+          "url": "http://127.0.0.1:8080/a",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "prefix": "/b",
+      "upstream": [
+        {
+          "url": "http://127.0.0.1:8081/b",
+          "weight": 1
+        },
+        {
+          "url": "http://127.0.0.1:8082/b",
+          "weight": 1
+        }
+      ]
     },
     {
       "prefix": "/",
-      "url": "http://127.0.0.1:8080/"
+      "upstream": "http://127.0.0.1:8080/"
     }
   ]
 }
