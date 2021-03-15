@@ -66,10 +66,6 @@ public class ProxyVerticle extends AbstractVerticle {
             err.response().setStatusCode(404).end("404");
         });
 
-//        server.webSocketHandler(websocket -> {
-//            System.out.println(websocket.path());
-//        });
-
         server.requestHandler(req -> {
             String path = req.path();
             HttpServerResponse resp = req.response();

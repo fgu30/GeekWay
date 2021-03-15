@@ -1,11 +1,11 @@
 Project Outline:
 
-* [x] Project Main coding
-* [x] reverse proxy support configuration
-* [x] adding unit test
-* [x] works on websocket
-* [ ] Stress Test compared to Nginx
-* [ ] load balancing
-* [ ] support static page deployment
+* [X] Project Main coding
+* [X] reverse proxy support configuration
+* [X] adding unit test
+* [X] works on websocket
+* [X] Stress Test compared to Nginx
+* [X] load balancing
+* [X] support static page deployment
 * [ ] UI page for configuration
 * [ ] Log and statistics
